@@ -3,10 +3,7 @@ import { defineConfig, loadEnv } from 'vite'
 import tailwindcss from '@tailwindcss/vite'
 import react from '@vitejs/plugin-react'
 
-// https://vite.dev/config/
 export default defineConfig(({ mode }) => {
-  // Load env file based on `mode` in the current working directory.
-  // The third parameter '' loads all env variables regardless of the VITE_ prefix.
   const env = loadEnv(mode, process.cwd(), '');
 
   return {
@@ -16,25 +13,20 @@ export default defineConfig(({ mode }) => {
         '@': path.resolve(__dirname, './src'),
       },
     },
+    // Settings for 'npm run dev'
     server: {
-      // Use PORT from .env, or default to 3001
       port: parseInt(env.PORT) || 3001,
-      strictPort: true, 
-      host: true, // Necessary for accessing the server via IP
+      strictPort: true,
+      host: true,
+    },
+    // Settings for 'npm run preview' <--- ADD THIS
+    preview: {
+      port: parseInt(env.PORT) || 3001,
+      strictPort: true,
+      host: true,
     },
     build: {
-      // Increases the limit to 1000kB to quiet the warning you received earlier
       chunkSizeWarningLimit: 1000,
-      rollupOptions: {
-        output: {
-          // Optional: Splits node_modules into separate chunks for better loading
-          manualChunks(id) {
-            if (id.includes('node_modules')) {
-              return 'vendor';
-            }
-          },
-        },
-      },
-    },
+    }
   }
 })
