@@ -1,0 +1,53 @@
+name: Deploy Kargic Admin
+
+on:
+  push:
+    branches: [ main ]
+
+jobs:
+  # STAGE 1: Ensure the build doesn't break
+  build-test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Install Dependencies
+        run: npm install
+
+      - name: Run Build Test
+        run: npm run build
+
+  # STAGE 2: Deploy to your Ubuntu VPS
+  deploy:
+    needs: build-test
+    runs-on: ubuntu-latest
+    steps:
+      - name: Deploy to VPS via SSH
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.HOST }}
+          username: ${{ secrets.USERNAME }}
+          key: ${{ secrets.SSH_KEY }}
+          script: |
+            # 1. Navigate to the kargic-admin folder
+            cd /var/www/kargic-admin
+            
+            # 2. Pull latest changes
+            git pull origin main
+            
+            # 3. Clean install and rebuild
+            npm install
+            npm run build
+            
+            # 4. Restart using the exact ID or Name we found earlier
+            # We use --update-env to ensure any new port/env changes are picked up
+            pm2 restart kargic-admin --update-env || pm2 start npm --name "kargic-admin" -- start -- -p 3001
+            
+            # 5. Save the PM2 list so it persists after server reboot
+            pm2 save
