@@ -1,11 +1,11 @@
 // PM2 ecosystem config for production
-export default {
+module.exports = {
   apps: [
     {
       name: 'kargic-admin',
-      script: './server.js',
+      script: 'server.js',
       instances: 1,
-      exec_mode: 'cluster',
+      exec_mode: 'fork', // Changed from 'cluster' to 'fork' for single instance
       env: {
         NODE_ENV: 'production',
         PORT: 3001,
@@ -15,7 +15,7 @@ export default {
       out_file: './logs/out.log',
       log_date_format: 'YYYY-MM-DD HH:mm:ss Z',
       merge_logs: true,
-      watch: false, // Set to true to restart on file changes during development
+      watch: false,
       ignore_watch: ['node_modules', 'dist', 'logs'],
       max_restarts: 10,
       min_uptime: '10s',
