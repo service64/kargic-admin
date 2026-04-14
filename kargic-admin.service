@@ -1,0 +1,26 @@
+[Unit]
+Description=Kargic Admin Dashboard
+After=network.target
+
+[Service]
+Type=simple
+User=www-data
+WorkingDirectory=/path/to/kargic-admin
+ExecStart=/usr/bin/node /path/to/kargic-admin/server.js
+Restart=always
+RestartSec=10
+StandardOutput=journal
+StandardError=journal
+Environment="NODE_ENV=production"
+Environment="PORT=3001"
+
+# Security settings
+NoNewPrivileges=true
+PrivateTmp=true
+
+# Resource limits (prevent runaway processes)
+MemoryLimit=512M
+CPUQuota=50%
+
+[Install]
+WantedBy=multi-user.target
