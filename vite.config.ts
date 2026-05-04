@@ -15,13 +15,13 @@ export default defineConfig(({ mode }) => {
     },
     // Settings for 'npm run dev'
     server: {
-      port: parseInt(env.PORT) || 3001,
+      port: parseInt(env.PORT) || 5173,
       strictPort: true,
       host: true,
     },
     // Settings for 'npm run preview' <--- ADD THIS
     preview: {
-      port: parseInt(env.PORT) || 3001,
+      port: parseInt(env.PORT) || 5173,
       strictPort: true,
       host: true,
     },

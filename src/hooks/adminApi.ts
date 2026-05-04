@@ -154,7 +154,16 @@ export const adminApi = axios.create({
 })
 
 adminApi.interceptors.request.use((config) => {
-  const url = config.url ?? ''
+  if (config.data instanceof FormData) {
+    const h = config.headers
+    if (h && typeof h.delete === "function") {
+      h.delete("Content-Type")
+    } else if (h && typeof h === "object") {
+      delete (h as Record<string, unknown>)["Content-Type"]
+      delete (h as Record<string, unknown>)["content-type"]
+    }
+  }
+  const url = config.url ?? ""
   const fullUrl = `${config.baseURL ?? ''}${url}`
   const token = getStoredAccessToken()
   if (token && shouldAttachAuth(fullUrl)) {

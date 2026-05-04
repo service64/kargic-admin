@@ -1,5 +1,6 @@
 import { BrowserRouter, Route, Routes } from 'react-router-dom'
 
+import { AuthHydrator } from '@/components/AuthHydrator'
 import { DashboardLayout } from '@/components/layout'
 import { ProtectedRoute } from '@/components/ProtectedRoute'
 import { DashboardPage } from '@/pages/DashboardPage/DashboardPage'
@@ -10,10 +11,12 @@ import { ActivityLogPage } from '@/pages/user-management/ActivityLogPage'
 import { UserDirectoryPage } from '@/pages/user-management/UserDirectoryPage'
 import { SellerVerificationPage } from '@/pages/seller-verification/SellerVerificationPage'
 import { SiteOrders } from '@/pages/SiteOrders'
+import ProductConfig from './pages/ProductConfig/ProductConfig'
 
 export default function App() {
   return (
     <BrowserRouter>
+      <AuthHydrator />
       <Routes>
         <Route path="/login" element={<LoginPage />} />
         <Route element={<ProtectedRoute />}>
@@ -22,6 +25,7 @@ export default function App() {
             <Route path="/dispute" element={<DisputePage />} />
             <Route path="/subscription" element={<Subscription />} />
             <Route path="/site-orders" element={<SiteOrders />} />
+            <Route path="/product-config" element={<ProductConfig />} />
             <Route
               path="/user-management/activity"
               element={<ActivityLogPage />}

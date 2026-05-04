@@ -13,6 +13,7 @@ import {
   CardTitle,
 } from '@/components/ui/card'
 import { Input } from '@/components/ui/input'
+import { AuthLoadingScreen } from '@/components/AuthLoadingScreen'
 import { Label } from '@/components/ui/label'
 import { persistAuthSession } from '@/hooks/adminApi'
 import {
@@ -39,6 +40,7 @@ function loginErrorMessage(err: unknown): string {
 
 export function LoginPage() {
   const navigate = useNavigate()
+  const isAuthHydrated = useAuthStore((s) => s.isAuthHydrated)
   const isAuthenticated = useAuthStore((s) => s.isAuthenticated)
   const login = useAuthStore((s) => s.login)
 
@@ -48,6 +50,10 @@ export function LoginPage() {
     resolver: zodResolver(loginSchema),
     defaultValues: { email: 'admin@example.com', password: 'change-me-in-production' },
   })
+
+  if (!isAuthHydrated) {
+    return <AuthLoadingScreen />
+  }
 
   if (isAuthenticated) {
     return <Navigate to="/" replace />
@@ -64,7 +70,7 @@ export function LoginPage() {
         user: data.user,
         tier: data.tier,
       })
-      login()
+      login({ user: data.user, tier: data.tier })
       navigate('/', { replace: true })
     } catch (err) {
       form.setError('root', { message: loginErrorMessage(err) })
