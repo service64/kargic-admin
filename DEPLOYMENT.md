@@ -44,6 +44,52 @@ sudo nginx -t
 sudo systemctl restart nginx
 ```
 
+### 5. Option D: Use Caddy (Hardened Reverse Proxy)
+Use the `Caddyfile` in this repository.
+
+```bash
+# Build and run the app server first
+npm run build
+PORT=3001 node server.js
+
+# In another shell: install and configure caddy
+sudo apt update
+sudo apt install -y caddy
+
+# Copy hardened config
+sudo cp Caddyfile /etc/caddy/Caddyfile
+
+# Set your real values
+sudo DOMAIN=admin.kargic.com APP_PORT=3001 ACME_EMAIL=you@example.com caddy validate --config /etc/caddy/Caddyfile
+
+# Reload caddy with env vars
+sudo systemctl edit caddy
+```
+
+Create this drop-in content:
+
+```ini
+[Service]
+Environment="DOMAIN=admin.kargic.com"
+Environment="APP_PORT=3001"
+Environment="ACME_EMAIL=you@example.com"
+```
+
+Then apply and verify:
+
+```bash
+sudo systemctl daemon-reload
+sudo systemctl restart caddy
+sudo systemctl status caddy
+sudo journalctl -u caddy -n 100 --no-pager
+```
+
+Security notes for this Caddy setup:
+- Blocks common secret/probe paths like `/.git` and `/.env`
+- Blocks known crawler/scanner user agents (including `OAI-SearchBot`)
+- Serves strict `robots.txt` policy from the edge
+- Adds baseline security headers before proxying
+
 ## Why CPU Was at 100%
 
 - ❌ Running `npm run dev` or `npm run dev` in production (Vite dev server)

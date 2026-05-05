@@ -1,0 +1,63 @@
+{
+    admin off
+    email {$ACME_EMAIL:admin@example.com}
+}
+
+# Hardened production template for admin.kargic.com
+# Replace DOMAIN/APP_PORT env vars or set them in your service manager.
+{$DOMAIN:admin.kargic.com} {
+    encode zstd gzip
+
+    log {
+        output file /var/log/caddy/admin-access.log {
+            roll_size 20MiB
+            roll_keep 10
+            roll_keep_for 720h
+        }
+        format json
+    }
+
+    # Optional: uncomment to make the admin panel private.
+    # basicauth {
+    #     admin $2a$14$replace_with_bcrypt_hash
+    # }
+
+    # Block high-risk probe paths before proxying.
+    @blocked_paths path_regexp blocked ^/(?:\.git|\.svn|\.hg|\.env|\.ht|wp-admin|wp-login\.php|phpmyadmin|cgi-bin|actuator|server-status)(?:/|$)
+    respond @blocked_paths 404
+
+    # Block common scraping/scanning user agents.
+    @blocked_ua header_regexp User-Agent (?i)(oai-searchbot|gptbot|claudebot|bytespider|ahrefsbot|semrushbot|mj12bot|dotbot|sqlmap|nikto|nmap|masscan|zgrab|acunetix)
+    respond @blocked_ua 403
+
+    # Limit methods to what the admin frontend typically needs.
+    @bad_method not method GET HEAD POST OPTIONS
+    respond @bad_method 405
+
+    # Serve strict robots policy from the edge.
+    @robots path /robots.txt
+    respond @robots 200 {
+        body "User-agent: *\nDisallow: /\n"
+        close
+    }
+
+    # Security headers for all responses.
+    header {
+        -Server
+        X-Frame-Options "SAMEORIGIN"
+        X-Content-Type-Options "nosniff"
+        Referrer-Policy "strict-origin-when-cross-origin"
+        Permissions-Policy "geolocation=(), microphone=(), camera=()"
+        Strict-Transport-Security "max-age=31536000; includeSubDomains; preload"
+    }
+
+    # Cache immutable static assets aggressively.
+    @static_assets path_regexp static \\.(?:css|js|mjs|jpg|jpeg|png|gif|webp|svg|ico|woff2?|ttf|eot)$
+    header @static_assets Cache-Control "public, max-age=2592000, immutable"
+
+    reverse_proxy 127.0.0.1:{$APP_PORT:3001} {
+        header_up X-Real-IP {remote_host}
+        header_up X-Forwarded-For {remote_host}
+        header_up X-Forwarded-Proto {scheme}
+    }
+}
