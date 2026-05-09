@@ -1,16 +1,16 @@
-"use client";
+'use client';
 
-import * as React from "react";
-import { CheckIcon, ChevronsUpDownIcon } from "lucide-react";
-import { Country } from "country-state-city";
+import * as React from 'react';
+import { CheckIcon, ChevronsUpDownIcon } from 'lucide-react';
+import { Country } from 'country-state-city';
 import {
   FormControl,
   FormField,
   FormItem,
   FormLabel,
   FormMessage,
-} from "@/components/ui/form";
-import { Button } from "@/components/ui/button";
+} from '@/components/ui/form';
+import { Button } from '@/components/ui/button';
 import {
   Command,
   CommandEmpty,
@@ -18,10 +18,14 @@ import {
   CommandInput,
   CommandItem,
   CommandList,
-} from "@/components/ui/command";
-import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
-import { cn } from "@/lib/utils";
-import type { Control, FieldPath, FieldValues } from "react-hook-form";
+} from '@/components/ui/command';
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from '@/components/ui/popover';
+import { cn } from '@/lib/utils';
+import type { Control, FieldPath, FieldValues } from 'react-hook-form';
 
 type CountryOption = {
   label: string;
@@ -45,9 +49,9 @@ export function FormCountry<T extends FieldValues>({
   control,
   name,
   label,
-  placeholder = "Select country",
-  searchPlaceholder = "Search country...",
-  emptyText = "No country found.",
+  placeholder = 'Select country',
+  searchPlaceholder = 'Search country...',
+  emptyText = 'No country found.',
   disabled,
   className,
   triggerClassName,
@@ -77,27 +81,32 @@ export function FormCountry<T extends FieldValues>({
           <FormItem className={className}>
             <FormLabel>{label}</FormLabel>
             <Popover open={open} onOpenChange={setOpen}>
-              <PopoverTrigger asChild>
-                <FormControl>
-                  <Button
-                    type="button"
-                    variant="outline"
-                    role="combobox"
-                    disabled={disabled}
-                    className={cn(
-                      "w-full justify-between font-normal",
-                      !selectedCountry && "text-muted-foreground",
-                      triggerClassName,
-                    )}
-                  >
-                    <span className="truncate">
-                      {selectedCountry ? selectedCountry.label : placeholder}
-                    </span>
-                    <ChevronsUpDownIcon className="ml-2 size-4 shrink-0 opacity-50" />
-                  </Button>
-                </FormControl>
-              </PopoverTrigger>
-              <PopoverContent className="w-[--radix-popover-trigger-width] p-0" align="start">
+              <PopoverTrigger
+                render={
+                  <FormControl>
+                    <Button
+                      type="button"
+                      variant="outline"
+                      role="combobox"
+                      disabled={disabled}
+                      className={cn(
+                        'w-full justify-between font-normal',
+                        !selectedCountry && 'text-muted-foreground',
+                        triggerClassName,
+                      )}
+                    >
+                      <span className="truncate">
+                        {selectedCountry ? selectedCountry.label : placeholder}
+                      </span>
+                      <ChevronsUpDownIcon className="ml-2 size-4 shrink-0 opacity-50" />
+                    </Button>
+                  </FormControl>
+                }
+              />
+              <PopoverContent
+                className="min-w-72 max-w-[min(100vw-2rem,28rem)] p-0"
+                align="start"
+              >
                 <Command>
                   <CommandInput placeholder={searchPlaceholder} />
                   <CommandList>
@@ -114,10 +123,10 @@ export function FormCountry<T extends FieldValues>({
                         >
                           <CheckIcon
                             className={cn(
-                              "mr-2 size-4",
+                              'mr-2 size-4',
                               selectedCountry?.value === country.value
-                                ? "opacity-100"
-                                : "opacity-0",
+                                ? 'opacity-100'
+                                : 'opacity-0',
                             )}
                           />
                           {country.label}
