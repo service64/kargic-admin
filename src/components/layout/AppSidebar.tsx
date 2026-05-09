@@ -1,5 +1,5 @@
-import * as React from 'react'
-import { Link, useLocation } from 'react-router-dom'
+import * as React from "react";
+import { Link, useLocation } from "react-router-dom";
 import {
   CommandIcon,
   CreditCardIcon,
@@ -9,9 +9,11 @@ import {
   ShieldUserIcon,
   UsersRoundIcon,
   BadgeCheckIcon,
-} from 'lucide-react'
+  Box,
+} from "lucide-react";
 
-import { DashboardNavUser } from '@/components/layout/DashboardNavUser'
+import { DashboardNavUser } from "@/components/layout/DashboardNavUser";
+import { useAuthStore } from "@/store/authStore";
 import {
   Sidebar,
   SidebarContent,
@@ -20,58 +22,64 @@ import {
   SidebarMenu,
   SidebarMenuButton,
   SidebarMenuItem,
-} from '@/components/ui/sidebar'
-
-const user = {
-  name: 'Demo User',
-  email: 'user@example.com',
-  avatar: '',
-}
+} from "@/components/ui/sidebar";
 
 const mainNav: {
-  title: string
-  url: string
-  icon: React.ReactNode
+  title: string;
+  url: string;
+  icon: React.ReactNode;
 }[] = [
   {
-    title: 'Dashboard',
-    url: '/',
+    title: "Dashboard",
+    url: "/",
     icon: <LayoutDashboardIcon />,
   },
   {
-    title: 'Dispute Management',
-    url: '/dispute',
+    title: "Dispute Management",
+    url: "/dispute",
     icon: <ScaleIcon />,
   },
   {
-    title: 'Subscriptions',
-    url: '/subscription',
+    title: "Subscriptions",
+    url: "/subscription",
     icon: <CreditCardIcon />,
   },
   {
-    title: 'Site Orders',
-    url: '/site-orders',
+    title: "Site Orders",
+    url: "/site-orders",
     icon: <PackageIcon />,
   },
   {
-    title: 'Activity Log',
-    url: '/user-management/activity',
+    title: "Product Config",
+    url: "/product-config",
+    icon: <Box />,
+  },
+  {
+    title: "Activity Log",
+    url: "/user-management/activity",
     icon: <ShieldUserIcon />,
   },
   {
-    title: 'User Directory',
-    url: '/user-management/users',
+    title: "User Directory",
+    url: "/user-management/users",
     icon: <UsersRoundIcon />,
   },
   {
-    title: 'Seller Verification',
-    url: '/seller-verification',
+    title: "Seller Verification",
+    url: "/seller-verification",
     icon: <BadgeCheckIcon />,
   },
-]
+];
 
 export function AppSidebar(props: React.ComponentProps<typeof Sidebar>) {
-  const location = useLocation()
+  const location = useLocation();
+  const authUser = useAuthStore((s) => s.user);
+
+  const user = {
+    name: authUser?.email?.split("@")[0]?.trim() || "User",
+    email: authUser?.email ?? "",
+    avatar: "",
+  };
 
   return (
     <Sidebar collapsible="offcanvas" {...props}>
@@ -96,8 +104,8 @@ export function AppSidebar(props: React.ComponentProps<typeof Sidebar>) {
               <SidebarMenuButton
                 render={<Link to={item.url} />}
                 isActive={
-                  item.url === '/'
-                    ? location.pathname === '/'
+                  item.url === "/"
+                    ? location.pathname === "/"
                     : location.pathname === item.url ||
                       location.pathname.startsWith(`${item.url}/`)
                 }
@@ -114,5 +122,5 @@ export function AppSidebar(props: React.ComponentProps<typeof Sidebar>) {
         <DashboardNavUser user={user} />
       </SidebarFooter>
     </Sidebar>
-  )
+  );
 }

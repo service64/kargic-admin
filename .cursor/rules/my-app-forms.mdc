@@ -1,0 +1,42 @@
+---
+description: >-
+  my-app ফর্ম তৈরি করতে হলে `src/components/form` এর Form* কম্পোনেন্ট ব্যবহার করো।
+  When creating or editing forms in my-app, use the shared Form* field components
+  from `src/components/form` with react-hook-form + zod—not ad-hoc inputs.
+globs:
+  - src/pages/**/*.tsx
+  - src/components/**/*.tsx
+alwaysApply: false
+---
+
+# Project form components (`src/components/form`)
+
+When the user asks to add or change a **form** (fields, validation, submit), prefer these wrappers. They already wire **react-hook-form** `FormField`, **shadcn-style** `FormItem` / `FormLabel` / `FormControl` / `FormMessage` from `@/components/ui/form`, and match app styling.
+
+| Component        | Use for |
+|------------------|---------|
+| `FormInput`      | Text, email, password, number, etc. (`control`, `name`, `label`, …) |
+| `FormTextArea`   | Multi-line text |
+| `FormSelect`     | Dropdown; pass `options: { label, value }[]` |
+| `FormCalender`   | Date picker (stores **ISO date string** `YYYY-MM-DD`); project name spelling is **Calender** |
+| `FormPhone`      | Phone + country flag (`react-phone-number-input` dependency) |
+| `FormCountry`    | Country combobox (requires `country-state-city`, `@/components/ui/command`, etc.) |
+
+Reference example: `src/components/form/FormExample.tsx` (`<Form {...form}>`, `FormInput`, `control={form.control}`, `name` matches schema keys).
+
+## Standard page shape
+
+1. `useForm` with `zodResolver` and a **zod** schema (`defaultValues` aligned with fields).
+2. Wrap fields in `<Form {...form}>` from `@/components/ui/form` (the `FormProvider` alias).
+3. Wrap submit in `<form onSubmit={form.handleSubmit(onSubmit)}>`.
+4. Use **`FormInput` / `FormTextArea` / `FormSelect` / `FormCalender`** with **`control={form.control}`** and **`name`** typed by `FieldPath<YourValues>` (same names as schema keys).
+
+Do **not** assemble raw `<Input />` + manual `<Label />` for new screen forms unless there is a strong reason; extend an existing `Form*` component or add a **new** `FormSomething.tsx` next to the others using the same `FormField` pattern.
+
+## Base UI note (this repo)
+
+Buttons and popovers use **Base UI**, not Radix `asChild`. Date field **`FormCalender`** uses `PopoverTrigger` with **`render={...}`**—follow existing `FormCalender.tsx`; do not add `asChild` on those triggers.
+
+## Optional / heavy field components
+
+- **`FormPhone`** / **`FormCountry`**: only if the feature needs them; confirm dependencies are installed in `package.json` or add them before use.
