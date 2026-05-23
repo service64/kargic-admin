@@ -17,120 +17,113 @@ import {
   ChartTooltipContent,
   type ChartConfig,
 } from '@/components/ui/chart'
-import type { SystemActivityPoint } from '@/pages/DashboardPage/overview-mock-data'
+import { Skeleton } from '@/components/ui/skeleton'
+import { useDailyPeerAnalytics } from '@/hooks/api/chat/useDailyPeerAnalytics'
+import { mapDailyPeerAnalyticsToChartPoints } from '@/hooks/api/chat/types'
 
 const chartConfig = {
-  disputes: {
-    label: 'Dispute activity',
+  activePeers: {
+    label: 'Active chat peers',
     color: 'var(--chart-1)',
-  },
-  subscriptions: {
-    label: 'Subscription events',
-    color: 'var(--chart-2)',
   },
 } satisfies ChartConfig
 
-export function SystemActivityOverviewChart({
-  data,
-}: {
-  data: SystemActivityPoint[]
-}) {
+export function SystemActivityOverviewChart() {
+  const { data, isLoading, isError, error } = useDailyPeerAnalytics({ days: 30 })
+  const chartData = data ? mapDailyPeerAnalyticsToChartPoints(data) : []
+  const todayCount = data?.today.uniquePeerCount ?? 0
+  const timezone = data?.timezone ?? 'Asia/Dhaka'
+
   return (
     <Card className="border shadow-sm">
       <CardHeader className="pb-2">
         <CardTitle className="text-base font-semibold">
-          System Activity Overview
+          Chat activity overview
         </CardTitle>
         <CardDescription className="text-xs">
-          Operational volume by day (mock)—dispute workflows vs subscription
-          lifecycle.
+          Unique active peers per day (last {data?.days ?? 30} days,{' '}
+          {timezone}). Today:{' '}
+          <span className="text-foreground font-medium tabular-nums">
+            {isLoading ? '…' : todayCount.toLocaleString()}
+          </span>
         </CardDescription>
       </CardHeader>
       <CardContent className="pt-0">
-        <ChartContainer config={chartConfig} className="aspect-auto h-[220px] w-full">
-          <AreaChart data={data} margin={{ left: 8, right: 8, top: 8 }}>
-            <defs>
-              <linearGradient id="fillDisputes" x1="0" y1="0" x2="0" y2="1">
-                <stop
-                  offset="5%"
-                  stopColor="var(--color-disputes)"
-                  stopOpacity={0.35}
-                />
-                <stop
-                  offset="95%"
-                  stopColor="var(--color-disputes)"
-                  stopOpacity={0.05}
-                />
-              </linearGradient>
-              <linearGradient
-                id="fillSubscriptions"
-                x1="0"
-                y1="0"
-                x2="0"
-                y2="1"
-              >
-                <stop
-                  offset="5%"
-                  stopColor="var(--color-subscriptions)"
-                  stopOpacity={0.35}
-                />
-                <stop
-                  offset="95%"
-                  stopColor="var(--color-subscriptions)"
-                  stopOpacity={0.05}
-                />
-              </linearGradient>
-            </defs>
-            <CartesianGrid vertical={false} strokeDasharray="3 3" />
-            <XAxis
-              dataKey="date"
-              tickLine={false}
-              axisLine={false}
-              tickMargin={8}
-              minTickGap={28}
-              tickFormatter={(value) => {
-                const d = new Date(value + 'T12:00:00')
-                return d.toLocaleDateString('en-US', {
-                  month: 'short',
-                  day: 'numeric',
-                })
-              }}
-            />
-            <ChartTooltip
-              content={
-                <ChartTooltipContent
-                  labelFormatter={(value) =>
-                    new Date(String(value) + 'T12:00:00').toLocaleDateString(
-                      'en-US',
-                      { weekday: 'short', month: 'short', day: 'numeric' }
-                    )
-                  }
-                  indicator="dot"
-                />
-              }
-            />
-            <ChartLegend
-              verticalAlign="bottom"
-              content={<ChartLegendContent />}
-            />
-            <Area
-              dataKey="disputes"
-              name="disputes"
-              type="monotone"
-              fill="url(#fillDisputes)"
-              stroke="var(--color-disputes)"
-              strokeWidth={1.5}
-            />
-            <Area
-              dataKey="subscriptions"
-              name="subscriptions"
-              type="monotone"
-              fill="url(#fillSubscriptions)"
-              stroke="var(--color-subscriptions)"
-              strokeWidth={1.5}
-            />
-          </AreaChart>
-        </ChartContainer>
+        {isLoading ? (
+          <Skeleton className="aspect-auto h-[220px] w-full rounded-md" />
+        ) : isError ? (
+          <p className="text-destructive flex h-[220px] items-center justify-center px-4 text-center text-sm">
+            {error instanceof Error
+              ? error.message
+              : 'Could not load chat activity.'}
+          </p>
+        ) : chartData.length === 0 ? (
+          <p className="text-muted-foreground flex h-[220px] items-center justify-center text-sm">
+            No chat activity in this period.
+          </p>
+        ) : (
+          <ChartContainer
+            config={chartConfig}
+            className="aspect-auto h-[220px] w-full"
+          >
+            <AreaChart data={chartData} margin={{ left: 8, right: 8, top: 8 }}>
+              <defs>
+                <linearGradient id="fillActivePeers" x1="0" y1="0" x2="0" y2="1">
+                  <stop
+                    offset="5%"
+                    stopColor="var(--color-activePeers)"
+                    stopOpacity={0.35}
+                  />
+                  <stop
+                    offset="95%"
+                    stopColor="var(--color-activePeers)"
+                    stopOpacity={0.05}
+                  />
+                </linearGradient>
+              </defs>
+              <CartesianGrid vertical={false} strokeDasharray="3 3" />
+              <XAxis
+                dataKey="date"
+                tickLine={false}
+                axisLine={false}
+                tickMargin={8}
+                minTickGap={28}
+                tickFormatter={(value) => {
+                  const d = new Date(value + 'T12:00:00')
+                  return d.toLocaleDateString('en-US', {
+                    month: 'short',
+                    day: 'numeric',
+                  })
+                }}
+              />
+              <ChartTooltip
+                content={
+                  <ChartTooltipContent
+                    labelFormatter={(value) =>
+                      new Date(String(value) + 'T12:00:00').toLocaleDateString(
+                        'en-US',
+                        { weekday: 'short', month: 'short', day: 'numeric' },
+                      )
+                    }
+                    indicator="dot"
+                  />
+                }
+              />
+              <ChartLegend
+                verticalAlign="bottom"
+                content={<ChartLegendContent />}
+              />
+              <Area
+                dataKey="activePeers"
+                name="activePeers"
+                type="monotone"
+                fill="url(#fillActivePeers)"
+                stroke="var(--color-activePeers)"
+                strokeWidth={1.5}
+              />
+            </AreaChart>
+          </ChartContainer>
+        )}
       </CardContent>
     </Card>
   )
