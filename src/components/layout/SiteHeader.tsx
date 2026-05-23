@@ -9,9 +9,10 @@ const titles: Record<string, string> = {
   '/': 'Dashboard',
   '/dispute': 'Dispute Management',
   '/subscription': 'Subscription Management',
-  '/site-orders': 'Site Orders & Partners',
-  '/user-management/activity': 'Activity Log',
-  '/user-management/users': 'User Directory',
+  '/site-orders': 'Site Orders',
+  '/user-management/impoters': 'Importers',
+  '/user-management/exporters': 'Exporters',
+  '/user-management/users': 'All users',
   '/seller-verification': 'Seller Verification',
 }
 

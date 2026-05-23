@@ -50,18 +50,23 @@ const mainNav: {
     icon: <PackageIcon />,
   },
   {
-    title: "Product Config",
+    title: "Product Category",
     url: "/product-config",
     icon: <Box />,
   },
   {
-    title: "Activity Log",
-    url: "/user-management/activity",
+    title: "Users",
+    url: "/user-management/users",
     icon: <ShieldUserIcon />,
   },
   {
-    title: "User Directory",
-    url: "/user-management/users",
+    title: "Impoters",
+    url: "/user-management/impoters",
+    icon: <ShieldUserIcon />,
+  },
+  {
+    title: "Exporters",
+    url: "/user-management/exporters",
     icon: <UsersRoundIcon />,
   },
   {

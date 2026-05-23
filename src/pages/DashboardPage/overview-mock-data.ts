@@ -55,43 +55,7 @@ export type RecentActivityRow = {
   target: string
 }
 
-export const MOCK_RECENT_ACTIVITY: RecentActivityRow[] = [
-  {
-    id: '1',
-    time: '2026-03-27 09:42',
-    actor: 'Elena Rodriguez',
-    action: 'Updated dispute',
-    target: '#DSP-90422',
-  },
-  {
-    id: '2',
-    time: '2026-03-27 09:18',
-    actor: 'System',
-    action: 'Seller doc scan',
-    target: 'SV-012',
-  },
-  {
-    id: '3',
-    time: '2026-03-27 08:55',
-    actor: 'James Chen',
-    action: 'Role change',
-    target: 'USR-02104',
-  },
-  {
-    id: '4',
-    time: '2026-03-27 08:31',
-    actor: 'Priya Nair',
-    action: 'Subscription renew',
-    target: 'SUB-10482',
-  },
-  {
-    id: '5',
-    time: '2026-03-27 07:50',
-    actor: 'Audit Bot',
-    action: 'Compliance export',
-    target: 'Quarterly',
-  },
-]
+ 
 
 export type RecentTransactionRow = {
   id: string

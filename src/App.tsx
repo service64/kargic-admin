@@ -12,6 +12,7 @@ import { UserDirectoryPage } from '@/pages/user-management/UserDirectoryPage'
 import { SellerVerificationPage } from '@/pages/seller-verification/SellerVerificationPage'
 import { SiteOrders } from '@/pages/SiteOrders'
 import ProductConfig from './pages/ProductConfig/ProductConfig'
+import AllUserPage from './pages/user-management/all-users-page'
 
 export default function App() {
   return (
@@ -27,12 +28,16 @@ export default function App() {
             <Route path="/site-orders" element={<SiteOrders />} />
             <Route path="/product-config" element={<ProductConfig />} />
             <Route
-              path="/user-management/activity"
+              path="/user-management/impoters"
               element={<ActivityLogPage />}
             />
             <Route
-              path="/user-management/users"
+              path="/user-management/exporters"
               element={<UserDirectoryPage />}
+            />
+            <Route
+              path="/user-management/users"
+              element={<AllUserPage />}
             />
             <Route
               path="/seller-verification"
