@@ -1,5 +1,6 @@
 import { useState } from 'react'
-import { SearchIcon } from 'lucide-react'
+import { EyeIcon, SearchIcon } from 'lucide-react'
+import { Link } from 'react-router-dom'
 
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import { Button } from '@/components/ui/button'
@@ -55,11 +56,27 @@ function ExporterRow({ row }: { row: AdminExporterListRowDto }) {
       <TableCell className="text-sm tabular-nums">
         {row.verifyCompanyPercent}%
       </TableCell>
+      <TableCell className="text-right">
+        <Button
+          variant="ghost"
+          size="icon-sm"
+          className="size-8"
+          title="View user details"
+          render={
+            <Link
+              to={`/user-management/users/${row.userId}`}
+              aria-label={`View details for ${row.companyName}`}
+            />
+          }
+        >
+          <EyeIcon className="size-4" />
+        </Button>
+      </TableCell>
     </TableRow>
   )
 }
 
-export function UserDirectoryPage() {
+export function ExportersPage() {
   const [companyNameInput, setCompanyNameInput] = useState('')
   const [companyNameFilter, setCompanyNameFilter] = useState('')
   const [page, setPage] = useState(1)
@@ -158,13 +175,16 @@ export function UserDirectoryPage() {
                 <TableHead className="text-muted-foreground text-xs font-semibold uppercase">
                   Verification
                 </TableHead>
+                <TableHead className="text-muted-foreground w-14 text-xs font-semibold uppercase">
+                  <span className="sr-only">Actions</span>
+                </TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
               {exporters.length === 0 ? (
                 <TableRow>
                   <TableCell
-                    colSpan={2}
+                    colSpan={3}
                     className="text-muted-foreground h-32 text-center text-sm"
                   >
                     No exporters match your filters.

@@ -1,7 +1,9 @@
 import { useState } from 'react'
 import { SearchIcon } from 'lucide-react'
+import { useNavigate } from 'react-router-dom'
 
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
+import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Skeleton } from '@/components/ui/skeleton'
@@ -14,7 +16,8 @@ import {
   TableRow,
 } from '@/components/ui/table'
 import { useAdminUsers } from '@/hooks/api/user/useAdminUsers'
-import type { AdminUserListRowDto } from '@/hooks/api/user/types'
+import type { AdminUserListRowDto, UserStatus } from '@/hooks/api/user/types'
+import { cn } from '@/lib/utils'
 
 const PAGE_SIZE = 20
 
@@ -27,6 +30,36 @@ function initialsFor(name: string, email: string) {
   return email.slice(0, 2).toUpperCase()
 }
 
+function statusBadgeClass(status: UserStatus) {
+  switch (status) {
+    case 'ACTIVE':
+      return 'border-emerald-200 bg-emerald-50 text-emerald-900 dark:border-emerald-900/50 dark:bg-emerald-950/40 dark:text-emerald-200'
+    case 'WARNING':
+      return 'border-amber-200 bg-amber-50 text-amber-900 dark:border-amber-900/50 dark:bg-amber-950/40 dark:text-amber-200'
+    case 'BLOCKED':
+      return 'border-red-200 bg-red-50 text-red-900 dark:border-red-900/50 dark:bg-red-950/40 dark:text-red-200'
+    case 'DELETED':
+      return 'border-slate-200 bg-slate-50 text-slate-700 dark:border-slate-700 dark:bg-slate-900/40 dark:text-slate-300'
+    default:
+      return ''
+  }
+}
+
+function statusLabel(status: UserStatus) {
+  switch (status) {
+    case 'ACTIVE':
+      return 'Active'
+    case 'WARNING':
+      return 'Warning'
+    case 'BLOCKED':
+      return 'Blocked'
+    case 'DELETED':
+      return 'Deleted'
+    default:
+      return status
+  }
+}
+
 function UsersTableSkeleton() {
   return (
     <div className="space-y-2 py-4">
@@ -37,9 +70,21 @@ function UsersTableSkeleton() {
   )
 }
 
-function UserRow({ user }: { user: AdminUserListRowDto }) {
+function UserRow({
+  user,
+  onOpen,
+}: {
+  user: AdminUserListRowDto
+  onOpen: (userId: string) => void
+}) {
   return (
-    <TableRow>
+    <TableRow
+      className="hover:bg-muted/50 cursor-pointer"
+      onClick={() => onOpen(user.userId)}
+      role="button"
+      tabIndex={0}
+      onKeyDown={(e) => e.key === 'Enter' && onOpen(user.userId)}
+    >
       <TableCell>
         <div className="flex items-center gap-3">
           <Avatar className="size-10 rounded-lg">
@@ -57,11 +102,20 @@ function UserRow({ user }: { user: AdminUserListRowDto }) {
         {user.email || '—'}
       </TableCell>
       <TableCell className="text-sm tabular-nums">{user.phone || '—'}</TableCell>
+      <TableCell>
+        <Badge
+          variant="outline"
+          className={cn('font-medium', statusBadgeClass(user.status))}
+        >
+          {statusLabel(user.status)}
+        </Badge>
+      </TableCell>
     </TableRow>
   )
 }
 
 export default function AllUserPage() {
+  const navigate = useNavigate()
   const [nameInput, setNameInput] = useState('')
   const [emailInput, setEmailInput] = useState('')
   const [phoneInput, setPhoneInput] = useState('')
@@ -101,6 +155,7 @@ export default function AllUserPage() {
   const users = data?.data ?? []
   const meta = data?.meta
   const hasFilters = Boolean(nameFilter || emailFilter || phoneFilter)
+  const openUser = (id: string) => navigate(`/user-management/users/${id}`)
 
   return (
     <div className="container mx-auto space-y-6 px-4 py-4">
@@ -199,20 +254,25 @@ export default function AllUserPage() {
                 <TableHead className="text-muted-foreground text-xs font-semibold uppercase">
                   Phone
                 </TableHead>
+                <TableHead className="text-muted-foreground text-xs font-semibold uppercase">
+                  Status
+                </TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
               {users.length === 0 ? (
                 <TableRow>
                   <TableCell
-                    colSpan={3}
+                    colSpan={4}
                     className="text-muted-foreground h-32 text-center text-sm"
                   >
                     No users match your filters.
                   </TableCell>
                 </TableRow>
               ) : (
-                users.map((user) => <UserRow key={user.userId} user={user} />)
+                users.map((user) => (
+                  <UserRow key={user.userId} user={user} onOpen={openUser} />
+                ))
               )}
             </TableBody>
           </Table>

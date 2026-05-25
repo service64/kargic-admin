@@ -6,13 +6,14 @@ import { ProtectedRoute } from '@/components/ProtectedRoute'
 import { DashboardPage } from '@/pages/DashboardPage/DashboardPage'
 import { DisputePage } from '@/pages/DisputePage/DisputePage'
 import { LoginPage } from '@/pages/LoginPage/LoginPage'
-import Subscription from '@/pages/subscription/Subscription'
-import { ActivityLogPage } from '@/pages/user-management/ActivityLogPage'
-import { UserDirectoryPage } from '@/pages/user-management/UserDirectoryPage'
+import Subscription from '@/pages/subscription/Subscription' 
 import { SellerVerificationPage } from '@/pages/seller-verification/SellerVerificationPage'
 import { SiteOrders } from '@/pages/SiteOrders'
 import ProductConfig from './pages/ProductConfig/ProductConfig'
 import AllUserPage from './pages/user-management/all-users-page'
+import { ExportersPage } from './pages/user-management/ExportersPage'
+import { ImpotersPage } from './pages/user-management/ImpotersPage'
+import SingleUserDetails from './pages/user-management/single-user-details'
 
 export default function App() {
   return (
@@ -29,15 +30,19 @@ export default function App() {
             <Route path="/product-config" element={<ProductConfig />} />
             <Route
               path="/user-management/impoters"
-              element={<ActivityLogPage />}
+              element={<ImpotersPage />}
             />
             <Route
               path="/user-management/exporters"
-              element={<UserDirectoryPage />}
+              element={<ExportersPage />}
             />
             <Route
               path="/user-management/users"
               element={<AllUserPage />}
+            />
+            <Route
+              path="/user-management/users/:id"
+              element={<SingleUserDetails />}
             />
             <Route
               path="/seller-verification"
