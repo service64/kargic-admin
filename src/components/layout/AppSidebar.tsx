@@ -10,6 +10,7 @@ import {
   UsersRoundIcon,
   BadgeCheckIcon,
   Box,
+  MessagesSquareIcon,
 } from "lucide-react";
 
 import { DashboardNavUser } from "@/components/layout/DashboardNavUser";
@@ -48,6 +49,11 @@ const mainNav: {
     title: "Site Orders",
     url: "/site-orders",
     icon: <PackageIcon />,
+  },
+  {
+    title: "Messages",
+    url: "/messages",
+    icon: <MessagesSquareIcon />,
   },
   {
     title: "Product Category",

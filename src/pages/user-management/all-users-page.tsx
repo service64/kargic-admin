@@ -1,12 +1,12 @@
-import { useState } from 'react'
-import { SearchIcon } from 'lucide-react'
-import { useNavigate } from 'react-router-dom'
+import { useState } from "react";
+import { SearchIcon, Send } from "lucide-react";
+import { useNavigate } from "react-router-dom";
 
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
-import { Badge } from '@/components/ui/badge'
-import { Button } from '@/components/ui/button'
-import { Input } from '@/components/ui/input'
-import { Skeleton } from '@/components/ui/skeleton'
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Skeleton } from "@/components/ui/skeleton";
 import {
   Table,
   TableBody,
@@ -14,49 +14,49 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from '@/components/ui/table'
-import { useAdminUsers } from '@/hooks/api/user/useAdminUsers'
-import type { AdminUserListRowDto, UserStatus } from '@/hooks/api/user/types'
-import { cn } from '@/lib/utils'
+} from "@/components/ui/table";
+import { useAdminUsers } from "@/hooks/api/user/useAdminUsers";
+import type { AdminUserListRowDto, UserStatus } from "@/hooks/api/user/types";
+import { cn } from "@/lib/utils";
 
-const PAGE_SIZE = 20
+const PAGE_SIZE = 20;
 
 function initialsFor(name: string, email: string) {
-  const parts = name.trim().split(/\s+/).filter(Boolean)
+  const parts = name.trim().split(/\s+/).filter(Boolean);
   if (parts.length >= 2) {
-    return `${parts[0]![0] ?? ''}${parts[1]![0] ?? ''}`.toUpperCase()
+    return `${parts[0]![0] ?? ""}${parts[1]![0] ?? ""}`.toUpperCase();
   }
-  if (parts[0]) return parts[0].slice(0, 2).toUpperCase()
-  return email.slice(0, 2).toUpperCase()
+  if (parts[0]) return parts[0].slice(0, 2).toUpperCase();
+  return email.slice(0, 2).toUpperCase();
 }
 
 function statusBadgeClass(status: UserStatus) {
   switch (status) {
-    case 'ACTIVE':
-      return 'border-emerald-200 bg-emerald-50 text-emerald-900 dark:border-emerald-900/50 dark:bg-emerald-950/40 dark:text-emerald-200'
-    case 'WARNING':
-      return 'border-amber-200 bg-amber-50 text-amber-900 dark:border-amber-900/50 dark:bg-amber-950/40 dark:text-amber-200'
-    case 'BLOCKED':
-      return 'border-red-200 bg-red-50 text-red-900 dark:border-red-900/50 dark:bg-red-950/40 dark:text-red-200'
-    case 'DELETED':
-      return 'border-slate-200 bg-slate-50 text-slate-700 dark:border-slate-700 dark:bg-slate-900/40 dark:text-slate-300'
+    case "ACTIVE":
+      return "border-emerald-200 bg-emerald-50 text-emerald-900 dark:border-emerald-900/50 dark:bg-emerald-950/40 dark:text-emerald-200";
+    case "WARNING":
+      return "border-amber-200 bg-amber-50 text-amber-900 dark:border-amber-900/50 dark:bg-amber-950/40 dark:text-amber-200";
+    case "BLOCKED":
+      return "border-red-200 bg-red-50 text-red-900 dark:border-red-900/50 dark:bg-red-950/40 dark:text-red-200";
+    case "DELETED":
+      return "border-slate-200 bg-slate-50 text-slate-700 dark:border-slate-700 dark:bg-slate-900/40 dark:text-slate-300";
     default:
-      return ''
+      return "";
   }
 }
 
 function statusLabel(status: UserStatus) {
   switch (status) {
-    case 'ACTIVE':
-      return 'Active'
-    case 'WARNING':
-      return 'Warning'
-    case 'BLOCKED':
-      return 'Blocked'
-    case 'DELETED':
-      return 'Deleted'
+    case "ACTIVE":
+      return "Active";
+    case "WARNING":
+      return "Warning";
+    case "BLOCKED":
+      return "Blocked";
+    case "DELETED":
+      return "Deleted";
     default:
-      return status
+      return status;
   }
 }
 
@@ -67,15 +67,17 @@ function UsersTableSkeleton() {
         <Skeleton key={i} className="h-12 w-full" />
       ))}
     </div>
-  )
+  );
 }
 
 function UserRow({
   user,
   onOpen,
+  onMessageOpen,
 }: {
-  user: AdminUserListRowDto
-  onOpen: (userId: string) => void
+  user: AdminUserListRowDto;
+  onOpen: (userId: string) => void;
+  onMessageOpen: (userId: string) => void;
 }) {
   return (
     <TableRow
@@ -83,7 +85,7 @@ function UserRow({
       onClick={() => onOpen(user.userId)}
       role="button"
       tabIndex={0}
-      onKeyDown={(e) => e.key === 'Enter' && onOpen(user.userId)}
+      onKeyDown={(e) => e.key === "Enter" && onOpen(user.userId)}
     >
       <TableCell>
         <div className="flex items-center gap-3">
@@ -95,53 +97,80 @@ function UserRow({
               {initialsFor(user.name, user.email)}
             </AvatarFallback>
           </Avatar>
-          <span className="font-medium">{user.name || '—'}</span>
+          <span className="font-medium">{user.name || "—"}</span>
         </div>
       </TableCell>
       <TableCell className="text-muted-foreground text-sm">
-        {user.email || '—'}
+        {user.email || "—"}
       </TableCell>
-      <TableCell className="text-sm tabular-nums">{user.phone || '—'}</TableCell>
+      <TableCell className="text-sm tabular-nums">
+        {user.phone || "—"}
+      </TableCell>
       <TableCell>
         <Badge
           variant="outline"
-          className={cn('font-medium', statusBadgeClass(user.status))}
+          className={cn("font-medium", statusBadgeClass(user.status))}
         >
           {statusLabel(user.status)}
         </Badge>
       </TableCell>
+      <TableCell>
+        <Badge
+          variant="outline"
+          className={cn(
+            "font-medium cursor-pointer hover:bg-muted/80",
+            statusBadgeClass(user.status),
+          )}
+          role="button"
+          tabIndex={0}
+          aria-label={`Message ${user.name || user.email}`}
+          onClick={(e) => {
+            e.stopPropagation();
+            onMessageOpen(user.userId);
+          }}
+          onKeyDown={(e) => {
+            if (e.key === "Enter" || e.key === " ") {
+              e.preventDefault();
+              e.stopPropagation();
+              onMessageOpen(user.userId);
+            }
+          }}
+        >
+          <Send />
+        </Badge>
+      </TableCell>
     </TableRow>
-  )
+  );
 }
 
 export default function AllUserPage() {
-  const navigate = useNavigate()
-  const [nameInput, setNameInput] = useState('')
-  const [emailInput, setEmailInput] = useState('')
-  const [phoneInput, setPhoneInput] = useState('')
-  const [nameFilter, setNameFilter] = useState('')
-  const [emailFilter, setEmailFilter] = useState('')
-  const [phoneFilter, setPhoneFilter] = useState('')
-  const [page, setPage] = useState(1)
+  const navigate = useNavigate();
+  const [nameInput, setNameInput] = useState("");
+  const [emailInput, setEmailInput] = useState("");
+  const [phoneInput, setPhoneInput] = useState("");
+  const [nameFilter, setNameFilter] = useState("");
+  const [emailFilter, setEmailFilter] = useState("");
+  const [phoneFilter, setPhoneFilter] = useState("");
+  const [page, setPage] = useState(1);
 
-  const resetPage = () => setPage(1)
+  const resetPage = () => setPage(1);
 
   const applyFilters = () => {
-    setNameFilter(nameInput.trim())
-    setEmailFilter(emailInput.trim())
-    setPhoneFilter(phoneInput.trim())
-    resetPage()
-  }
+    setNameFilter(nameInput.trim());
+    setEmailFilter(emailInput.trim());
+    setPhoneFilter(phoneInput.trim());
+    resetPage();
+  };
 
   const clearFilters = () => {
-    setNameInput('')
-    setEmailInput('')
-    setPhoneInput('')
-    setNameFilter('')
-    setEmailFilter('')
-    setPhoneFilter('')
-    resetPage()
-  }
+    setNameInput("");
+    setEmailInput("");
+    setPhoneInput("");
+    setNameFilter("");
+    setEmailFilter("");
+    setPhoneFilter("");
+    resetPage();
+  };
 
   const { data, isLoading, isError, error, isFetching, refetch } =
     useAdminUsers({
@@ -150,12 +179,14 @@ export default function AllUserPage() {
       ...(nameFilter ? { name: nameFilter } : {}),
       ...(emailFilter ? { email: emailFilter } : {}),
       ...(phoneFilter ? { phone: phoneFilter } : {}),
-    })
+    });
 
-  const users = data?.data ?? []
-  const meta = data?.meta
-  const hasFilters = Boolean(nameFilter || emailFilter || phoneFilter)
-  const openUser = (id: string) => navigate(`/user-management/users/${id}`)
+  const users = data?.data ?? [];
+  const meta = data?.meta;
+  const hasFilters = Boolean(nameFilter || emailFilter || phoneFilter);
+  const openUser = (id: string) => navigate(`/user-management/users/${id}`);
+  const openMessage = (id: string) =>
+    navigate(`/messages?peer=${encodeURIComponent(id)}`);
 
   return (
     <div className="container mx-auto space-y-6 px-4 py-4">
@@ -175,7 +206,7 @@ export default function AllUserPage() {
             placeholder="Filter by name..."
             value={nameInput}
             onChange={(e) => setNameInput(e.target.value)}
-            onKeyDown={(e) => e.key === 'Enter' && applyFilters()}
+            onKeyDown={(e) => e.key === "Enter" && applyFilters()}
             className="h-10"
           />
         </div>
@@ -187,7 +218,7 @@ export default function AllUserPage() {
             placeholder="Filter by email..."
             value={emailInput}
             onChange={(e) => setEmailInput(e.target.value)}
-            onKeyDown={(e) => e.key === 'Enter' && applyFilters()}
+            onKeyDown={(e) => e.key === "Enter" && applyFilters()}
             className="h-10"
           />
         </div>
@@ -199,16 +230,12 @@ export default function AllUserPage() {
             placeholder="Filter by phone..."
             value={phoneInput}
             onChange={(e) => setPhoneInput(e.target.value)}
-            onKeyDown={(e) => e.key === 'Enter' && applyFilters()}
+            onKeyDown={(e) => e.key === "Enter" && applyFilters()}
             className="h-10"
           />
         </div>
         <div className="flex flex-wrap items-end gap-2">
-          <Button
-            type="button"
-            className="h-10 gap-2"
-            onClick={applyFilters}
-          >
+          <Button type="button" className="h-10 gap-2" onClick={applyFilters}>
             <SearchIcon className="size-4" />
             Search
           </Button>
@@ -239,7 +266,7 @@ export default function AllUserPage() {
           <UsersTableSkeleton />
         ) : isError ? (
           <p className="text-destructive px-4 py-12 text-center text-sm">
-            {error instanceof Error ? error.message : 'Failed to load users.'}
+            {error instanceof Error ? error.message : "Failed to load users."}
           </p>
         ) : (
           <Table>
@@ -257,6 +284,9 @@ export default function AllUserPage() {
                 <TableHead className="text-muted-foreground text-xs font-semibold uppercase">
                   Status
                 </TableHead>
+                <TableHead className="text-muted-foreground text-xs font-semibold uppercase">
+                  Messages
+                </TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
@@ -271,7 +301,12 @@ export default function AllUserPage() {
                 </TableRow>
               ) : (
                 users.map((user) => (
-                  <UserRow key={user.userId} user={user} onOpen={openUser} />
+                  <UserRow
+                    key={user.userId}
+                    user={user}
+                    onOpen={openUser}
+                    onMessageOpen={openMessage}
+                  />
                 ))
               )}
             </TableBody>
@@ -283,7 +318,7 @@ export default function AllUserPage() {
         <div className="text-muted-foreground flex flex-wrap items-center justify-between gap-2 text-sm">
           <span>
             Page {meta.page} of {meta.totalPage} · {meta.total} users
-            {isFetching ? ' · updating…' : ''}
+            {isFetching ? " · updating…" : ""}
           </span>
           <div className="flex gap-2">
             <Button
@@ -308,5 +343,5 @@ export default function AllUserPage() {
         </div>
       ) : null}
     </div>
-  )
+  );
 }
