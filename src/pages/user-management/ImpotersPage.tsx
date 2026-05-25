@@ -1,5 +1,6 @@
 import { useState } from 'react'
-import { SearchIcon } from 'lucide-react'
+import { EyeIcon, SearchIcon } from 'lucide-react'
+import { Link } from 'react-router-dom'
 
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
@@ -25,7 +26,7 @@ function ImportersTableSkeleton() {
   )
 }
 
-export function ActivityLogPage() {
+export function ImpotersPage() {
   const [companyNameInput, setCompanyNameInput] = useState('')
   const [importLicenseInput, setImportLicenseInput] = useState('')
   const [businessTypeInput, setBusinessTypeInput] = useState('')
@@ -190,13 +191,16 @@ export function ActivityLogPage() {
                 <TableHead className="text-muted-foreground text-xs font-semibold uppercase">
                   Country
                 </TableHead>
+                <TableHead className="text-muted-foreground w-14 text-xs font-semibold uppercase">
+                  <span className="sr-only">Actions</span>
+                </TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
               {importers.length === 0 ? (
                 <TableRow>
                   <TableCell
-                    colSpan={4}
+                    colSpan={5}
                     className="text-muted-foreground h-32 text-center text-sm"
                   >
                     No importers match your filters.
@@ -218,6 +222,22 @@ export function ActivityLogPage() {
                     </TableCell>
                     <TableCell className="text-sm">
                       {row.country || '—'}
+                    </TableCell>
+                    <TableCell className="text-right">
+                      <Button
+                        variant="ghost"
+                        size="icon-sm"
+                        className="size-8"
+                        title="View user details"
+                        render={
+                          <Link
+                            to={`/user-management/users/${row.userId}`}
+                            aria-label={`View details for ${row.companyName}`}
+                          />
+                        }
+                      >
+                        <EyeIcon className="size-4" />
+                      </Button>
                     </TableCell>
                   </TableRow>
                 ))
