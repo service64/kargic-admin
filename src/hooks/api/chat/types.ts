@@ -25,3 +25,52 @@ export function mapDailyPeerAnalyticsToChartPoints(
     activePeers: row.uniquePeerCount,
   }))
 }
+
+export type ChatReadStateDto = {
+  myLastReadAt: string | null
+  peerLastReadAt: string | null
+}
+
+export type ChatMessagesPage = {
+  data: Record<string, unknown>[]
+  meta: {
+    page: number
+    limit: number
+    total: number
+    totalPages: number
+  }
+  readState?: ChatReadStateDto
+}
+
+export type ChatPeerProfile = {
+  id: string
+  name: string
+  email: string
+  phone: string
+  activeRole: 'EXPORTER' | 'IMPORTER' | 'ADMIN'
+  profileImage:
+    | string
+    | {
+        url?: string
+      }
+    | null
+  lastApiActivityAt?: string | null
+  liveActive?: boolean
+}
+
+export type ChatPeerRow = {
+  peerUserId: string
+  conversationId: string
+  lastMessageAt: string | null
+  peer: ChatPeerProfile | null
+  unreadCount?: number
+}
+
+export type ChatListMeta = {
+  page: number
+  limit: number
+  total: number
+  totalPage: number
+  hasNextPage: boolean
+  hasPrevPage: boolean
+}

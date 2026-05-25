@@ -9,6 +9,7 @@ import { LoginPage } from '@/pages/LoginPage/LoginPage'
 import Subscription from '@/pages/subscription/Subscription' 
 import { SellerVerificationPage } from '@/pages/seller-verification/SellerVerificationPage'
 import { SiteOrders } from '@/pages/SiteOrders'
+import Messages from '@/pages/Messages/Messages'
 import ProductConfig from './pages/ProductConfig/ProductConfig'
 import AllUserPage from './pages/user-management/all-users-page'
 import { ExportersPage } from './pages/user-management/ExportersPage'
@@ -27,6 +28,7 @@ export default function App() {
             <Route path="/dispute" element={<DisputePage />} />
             <Route path="/subscription" element={<Subscription />} />
             <Route path="/site-orders" element={<SiteOrders />} />
+            <Route path="/messages" element={<Messages />} />
             <Route path="/product-config" element={<ProductConfig />} />
             <Route
               path="/user-management/impoters"
