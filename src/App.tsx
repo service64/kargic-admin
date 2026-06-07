@@ -15,6 +15,8 @@ import AllUserPage from './pages/user-management/all-users-page'
 import { ExportersPage } from './pages/user-management/ExportersPage'
 import { ImpotersPage } from './pages/user-management/ImpotersPage'
 import SingleUserDetails from './pages/user-management/single-user-details'
+import { ContactsPage } from './pages/Contacts/ContactsPage'
+import { ContactDetailsPage } from './pages/Contacts/ContactDetailsPage'
 
 export default function App() {
   return (
@@ -29,6 +31,8 @@ export default function App() {
             <Route path="/subscription" element={<Subscription />} />
             <Route path="/site-orders" element={<SiteOrders />} />
             <Route path="/messages" element={<Messages />} />
+            <Route path="/contacts" element={<ContactsPage />} />
+            <Route path="/contacts/:id" element={<ContactDetailsPage />} />
             <Route path="/product-config" element={<ProductConfig />} />
             <Route
               path="/user-management/impoters"
