@@ -11,6 +11,7 @@ import {
   BadgeCheckIcon,
   Box,
   MessagesSquareIcon,
+  MailIcon,
 } from "lucide-react";
 
 import { DashboardNavUser } from "@/components/layout/DashboardNavUser";
@@ -54,6 +55,11 @@ const mainNav: {
     title: "Messages",
     url: "/messages",
     icon: <MessagesSquareIcon />,
+  },
+  {
+    title: "Contacts",
+    url: "/contacts",
+    icon: <MailIcon />,
   },
   {
     title: "Product Category",
