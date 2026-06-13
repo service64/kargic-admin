@@ -17,6 +17,8 @@ import { ImpotersPage } from './pages/user-management/ImpotersPage'
 import SingleUserDetails from './pages/user-management/single-user-details'
 import { ContactsPage } from './pages/Contacts/ContactsPage'
 import { ContactDetailsPage } from './pages/Contacts/ContactDetailsPage'
+import { ExportBlogListPage } from './pages/ExportBlog/ExportBlogListPage'
+import { ExportBlogFormPage } from './pages/ExportBlog/ExportBlogFormPage'
 
 export default function App() {
   return (
@@ -33,6 +35,9 @@ export default function App() {
             <Route path="/messages" element={<Messages />} />
             <Route path="/contacts" element={<ContactsPage />} />
             <Route path="/contacts/:id" element={<ContactDetailsPage />} />
+            <Route path="/export-blog" element={<ExportBlogListPage />} />
+            <Route path="/export-blog/new" element={<ExportBlogFormPage />} />
+            <Route path="/export-blog/:id/edit" element={<ExportBlogFormPage />} />
             <Route path="/product-config" element={<ProductConfig />} />
             <Route
               path="/user-management/impoters"

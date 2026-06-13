@@ -19,7 +19,7 @@ export type StoredAuthUser = {
 
 const API_BASE =
   (import.meta.env.VITE_API_BASE_URL as string | undefined)?.replace(/\/$/, '') ??
-  ''
+  'http://localhost:3001/api/v1'
 
 /** POST path for refresh (relative to API_BASE). Override via env if needed. */
 const REFRESH_PATH =
