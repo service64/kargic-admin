@@ -6,6 +6,8 @@ export type MediaUseCase =
   | 'USER'
   | 'BANNER'
   | 'MESSAGE'
+  | 'VERIFICATION'
+  | 'BLOG'
 
 export type UploadedImage = {
   _id: string

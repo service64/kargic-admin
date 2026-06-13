@@ -129,3 +129,36 @@
     @apply font-sans;
     }
 }
+
+/* Quill editor — single border, no stacked toolbar/container lines */
+@layer components {
+  .quill-field .ql-toolbar.ql-snow {
+    border: none;
+    border-bottom: 1px solid var(--border);
+    background: var(--muted);
+    border-radius: 0;
+    padding: 0.5rem;
+  }
+
+  .quill-field .ql-container.ql-snow {
+    border: none;
+    font-family: inherit;
+    font-size: 0.875rem;
+  }
+
+  .quill-field .ql-editor {
+    min-height: 320px;
+    padding: 1rem;
+    line-height: 1.6;
+  }
+
+  .quill-field .ql-editor.ql-blank::before {
+    color: var(--muted-foreground);
+    font-style: normal;
+  }
+
+  .quill-field:focus-within {
+    border-color: var(--ring);
+    box-shadow: 0 0 0 3px color-mix(in oklch, var(--ring) 50%, transparent);
+  }
+}
