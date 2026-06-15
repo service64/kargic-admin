@@ -21,6 +21,8 @@ import { ExportBlogListPage } from './pages/ExportBlog/ExportBlogListPage'
 import { ExportBlogFormPage } from './pages/ExportBlog/ExportBlogFormPage'
 import SeoPage from './pages/Seo/SeoPage'
 import SeoCreateUpdateForm from './pages/Seo/SeoCreateUpdateForm/SeoCreateUpdateForm'
+import SitemapManagePage from './pages/Seo/SitemapManagePage'
+import SitemapFormPage from './pages/Seo/SitemapFormPage'
 
 export default function App() {
   return (
@@ -41,6 +43,9 @@ export default function App() {
             <Route path="/export-blog/new" element={<ExportBlogFormPage />} />
             <Route path="/export-blog/:id/edit" element={<ExportBlogFormPage />} />
             <Route path="/seo" element={<SeoPage />} />
+            <Route path="/seo/sitemap" element={<SitemapManagePage />} />
+            <Route path="/seo/sitemap/new" element={<SitemapFormPage />} />
+            <Route path="/seo/sitemap/edit/:id" element={<SitemapFormPage />} />
             <Route path="/seo/new" element={<SeoCreateUpdateForm />} />
             <Route path="/seo/edit/:page" element={<SeoCreateUpdateForm />} />
             <Route path="/product-config" element={<ProductConfig />} />
