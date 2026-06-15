@@ -13,6 +13,7 @@ import {
   MessagesSquareIcon,
   MailIcon,
   NewspaperIcon,
+  SearchIcon,
 } from "lucide-react";
 
 import { DashboardNavUser } from "@/components/layout/DashboardNavUser";
@@ -66,6 +67,11 @@ const mainNav: {
     title: "Export Blog",
     url: "/export-blog",
     icon: <NewspaperIcon />,
+  },
+  {
+    title: "SEO",
+    url: "/seo",
+    icon: <SearchIcon />,
   },
   {
     title: "Product Category",

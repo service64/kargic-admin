@@ -19,6 +19,8 @@ import { ContactsPage } from './pages/Contacts/ContactsPage'
 import { ContactDetailsPage } from './pages/Contacts/ContactDetailsPage'
 import { ExportBlogListPage } from './pages/ExportBlog/ExportBlogListPage'
 import { ExportBlogFormPage } from './pages/ExportBlog/ExportBlogFormPage'
+import SeoPage from './pages/Seo/SeoPage'
+import SeoCreateUpdateForm from './pages/Seo/SeoCreateUpdateForm/SeoCreateUpdateForm'
 
 export default function App() {
   return (
@@ -38,6 +40,9 @@ export default function App() {
             <Route path="/export-blog" element={<ExportBlogListPage />} />
             <Route path="/export-blog/new" element={<ExportBlogFormPage />} />
             <Route path="/export-blog/:id/edit" element={<ExportBlogFormPage />} />
+            <Route path="/seo" element={<SeoPage />} />
+            <Route path="/seo/new" element={<SeoCreateUpdateForm />} />
+            <Route path="/seo/edit/:page" element={<SeoCreateUpdateForm />} />
             <Route path="/product-config" element={<ProductConfig />} />
             <Route
               path="/user-management/impoters"
