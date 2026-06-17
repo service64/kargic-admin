@@ -8,7 +8,6 @@ import { Link, useNavigate, useParams } from "react-router-dom"
 import { z } from "zod"
 
 import { FormCalender } from "@/components/form/FormCalender"
-import { FormInput } from "@/components/form/FormInput"
 import { FormSelect } from "@/components/form/FormSelect"
 import { Button } from "@/components/ui/button"
 import { Checkbox } from "@/components/ui/checkbox"
@@ -34,6 +33,7 @@ import {
   displaySitemapPath,
   normalizeSitemapPath,
 } from "@/pages/Seo/sitemapPath"
+import { SitemapUrlPathField } from "@/pages/Seo/SitemapUrlPathField"
 
 const urlPathSchema = z
   .string()
@@ -137,10 +137,9 @@ export default function SitemapFormPage() {
           {isEdit ? "Edit sitemap entry" : "New sitemap entry"}
         </h1>
         <p className="text-muted-foreground mt-2 text-sm">
-          Home page: type <code className="text-xs">/</code> or leave the field
-          empty. Other pages: <code className="text-xs">about</code>,{" "}
-          <code className="text-xs">products/cotton-shirt</code>. Full URLs are
-          also accepted and converted automatically.
+          Pick a public page from the list. Paths are stored without locale or
+          domain — the site generates <code className="text-xs">/en</code>,{" "}
+          <code className="text-xs">/bn</code>, etc. in sitemap.xml.
         </p>
       </div>
 
@@ -149,26 +148,12 @@ export default function SitemapFormPage() {
           onSubmit={form.handleSubmit(onSubmit)}
           className="space-y-6 rounded-xl border p-6"
         >
-          <FormInput
+          <SitemapUrlPathField
             control={form.control}
             name="url"
-            label="URL path"
-            placeholder="/ (or about, products/my-product)"
-            labelEnd={
-              <Button
-                type="button"
-                variant="link"
-                className="h-auto p-0 text-xs"
-                onClick={() => form.setValue("url", "/")}
-              >
-                Use home page (/)
-              </Button>
-            }
+            disabled={submitBusy}
+            fallbackUrl={isEdit ? entry?.url : undefined}
           />
-          <p className="text-muted-foreground -mt-4 text-xs">
-            Generates <code>/en</code>, <code>/bn</code>, etc. in sitemap.xml —
-            do not include locale or domain.
-          </p>
 
           <div className="grid gap-4 sm:grid-cols-2">
             <FormSelect
