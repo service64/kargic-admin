@@ -23,6 +23,7 @@ import {
   uploadImageFile,
 } from "@/hooks/media/useImageUpload"
 import { cn } from "@/lib/utils"
+import { SeoPageKeyField } from "./SeoPageKeyField"
 
 const pageKeySchema = z
   .string()
@@ -224,12 +225,11 @@ export default function SeoCreateUpdateForm() {
 
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
-          <FormInput
+          <SeoPageKeyField
             control={form.control}
             name="page"
-            label="Page key"
-            placeholder="home"
-            disabled={submitBusy}
+            disabled={submitBusy || isEdit}
+            fallbackKey={isEdit ? seo?.page : undefined}
           />
 
           <FormInput
